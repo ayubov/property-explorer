@@ -1,0 +1,85 @@
+/* Tokens, resets and the few classes shared across pages. Anything owned by a
+   single component lives in that component's scoped block. */
+:root {
+  --bg: #f4f1eb;
+  --surface: #ffffff;
+  --text: #1c1917;
+  --muted: #57534e;
+  --border: #e7e5e4;
+  --placeholder: #ddd8d0;
+  --accent: #0f766e;
+  --accent-hover: #0d5f59;
+  --danger: #8a3d07;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgb(28 25 23 / 8%);
+  --map-height: 240px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.page-title {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+}
+
+.page-intro {
+  margin: 0 0 20px;
+  color: var(--muted);
+}
+
+.status {
+  margin: 24px 0;
+  color: var(--muted);
+}
+
+.status-error {
+  color: var(--danger);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --map-height: 320px;
+  }
+}
