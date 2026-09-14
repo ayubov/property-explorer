@@ -14,7 +14,8 @@ if (error.value || !listing.value) {
 // Getters, so the head tags follow a refetch instead of freezing on first load.
 useSeoMeta({
   title: () => listingMetaTitle(listing.value),
-  description: () => listingMetaDescription(listing.value)
+  description: () => listingMetaDescription(listing.value),
+  ogImage: () => listing.value?.imageUrl || undefined
 })
 
 const paragraphs = computed(() =>

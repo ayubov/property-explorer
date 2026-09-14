@@ -4,10 +4,14 @@ definePageMeta({
   keepalive: true
 })
 
+const requestUrl = useRequestURL()
+
 useSeoMeta({
   title: 'Homes for sale',
   description:
-    'Browse homes for sale in the Netherlands from the Funda partner API.'
+    'Browse homes for sale in the Netherlands from the Funda partner API.',
+  // Share previews need an absolute URL.
+  ogImage: `${requestUrl.origin}/og-image.jpg`
 })
 
 const { listings, error, hasMore, loadMore, loadingMore, loadMoreFailed } =

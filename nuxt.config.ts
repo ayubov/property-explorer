@@ -16,10 +16,9 @@ export default defineNuxtConfig({
     fundaApiKey: ''
   },
 
-  // Funda listings change slowly; serve cached responses and revalidate behind them.
+  // Listings change slowly, so serve cached responses and revalidate behind them.
   routeRules: {
-    '/api/listings': { swr: 300 },
-    '/api/listings/**': { swr: 600 }
+    '/api/listings/*': { swr: 600 }
   },
 
   vite: {
