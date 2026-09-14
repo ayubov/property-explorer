@@ -1,21 +1,17 @@
 # Property explorer
 
-A small Nuxt app that lists homes for sale from the Funda partner API and shows a detail page with photos and a map.
+A Nuxt app that lists homes for sale from the Funda API, with a detail page showing photos and a map.
 
-## How to run
+Live: [funda.ayubov.com](https://funda.ayubov.com)
+
+## Getting started
 
 ```bash
 npm install
 cp .env.example .env
 ```
 
-Add your Funda API key to `.env` as `NUXT_FUNDA_API_KEY`, then:
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000).
+Put your Funda key in `.env` as `NUXT_FUNDA_API_KEY`, then run `npm run dev` and open [localhost:3000](http://localhost:3000).
 
 ## Checks
 
@@ -26,20 +22,39 @@ npm test
 npm run format
 ```
 
-A Husky pre-commit hook runs lint, Prettier check, typecheck, and tests. The same checks plus a build run in GitHub Actions (`.github/workflows/ci.yml`).
+These run on every commit through Husky, and in CI together with a build.
 
-## Deploying
+## How it works
 
-Nuxt builds for Vercel out of the box; the only required setting is the `NUXT_FUNDA_API_KEY` environment variable. The key is read at runtime, so the build itself never needs it — the server fails fast on boot if it is missing.
+- Two pages: the list (`/`) and a listing (`/listings/[id]`)
+- Both are server-rendered with `useFetch`
+- Funda is called from `server/api` routes with an 8 second timeout, so the key never reaches the browser
+- `server/funda` turns Funda's Dutch fields into the types in `shared/types`
+- The list loads more pages on demand and keeps its cards when you come back from a listing
+- Titles, descriptions and share images come from `useSeoMeta`
+- Plain CSS, mobile first: tokens in `app/assets/css/main.css`, the rest scoped to components
+- Vitest covers the pure logic: formatters, mappers, and the API client
 
-## How it is built
+## Deployment
 
-- Two pages: listings (`/`) and listing detail (`/listings/[id]`)
-- Server routes in `server/api` call Funda so the API key stays on the server, with an 8s timeout and short-lived `swr` caching so page views do not each hit Funda
-- `server/funda` owns the upstream client and mappers, so Funda's Dutch field names never reach the UI; `shared/types` holds the contract between them
-- Pages load data with `useFetch`, which runs on the server first (SSR)
-- List page uses **Load more** via a `useListingsFeed` composable, and `keepalive` so those cards (and scroll) survive opening a listing
-- Detail page: mosaic photo gallery with a fullscreen viewer, facts, and a MapLibre map
-- Page metadata with `useSeoMeta` / `useHead`: titles suffixed with `· Property explorer`, plus a per-listing description and `og:image`
-- Mobile-first plain CSS: tokens and shared classes in `app/assets/css/main.css`, everything else in scoped component blocks
-- Vitest covers formatters, Funda mappers, and the mocked API client
+Runs on Vercel. The only setting it needs is `NUXT_FUNDA_API_KEY`.
+
+- The key is read at runtime only, so builds and CI never need it, and the server stops on boot if it is missing
+- Listing pages are cached for 10 minutes and refreshed in the background
+- The list is not cached: its pages come from a live feed, so a cached page could skip listings
+
+## Further improvements
+
+- Search and filters on the list page
+- A map view of the results, not just the single listing
+- The page number in the URL, so a list page can be shared and survives a refresh
+- Dutch translations; the listings are Dutch but the interface is English only
+- Smaller images for mobile with `@nuxt/image`
+- Tests for components and API routes
+- Retry failed Funda requests instead of showing an error right away
+- Error tracking and web vitals
+- JSON-LD on listing pages
+
+## Time spent
+
+About 6 hours.
